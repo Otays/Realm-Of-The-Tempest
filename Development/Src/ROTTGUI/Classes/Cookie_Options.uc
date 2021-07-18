@@ -44,5 +44,6 @@ defaultProperties
   // Default display settings
   showCombatDetail=true 
   
+  scaleModeType=1  ///NO_STRETCH_SCALE
   
 }
