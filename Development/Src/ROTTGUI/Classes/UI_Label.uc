@@ -31,6 +31,7 @@ enum FontStyles {
   DEFAULT_MEDIUM_GOLD,
   DEFAULT_MEDIUM_YELLOW,
   DEFAULT_MEDIUM_ORANGE,
+  DEFAULT_MEDIUM_PEACH,
   DEFAULT_MEDIUM_GREEN,
   DEFAULT_MEDIUM_RED,
   DEFAULT_MEDIUM_CYAN,
@@ -599,10 +600,17 @@ defaultProperties
   
   // Cinzel: Medium, Orange
   begin object class=UI_String_Style Name=Cinzel_Medium_Orange
-    drawColor=(R=255,G=170,B=88,A=255)
+    drawColor=(R=255,G=145,B=0,A=255) 
     font=Font'GUI.Fonts.Cinzel_22'
   end object
   uiFonts[DEFAULT_MEDIUM_ORANGE]=Cinzel_Medium_Orange
+  
+  // Cinzel: Medium, Orange
+  begin object class=UI_String_Style Name=Cinzel_Medium_Peach
+    drawColor=(R=255,G=170,B=88,A=255)
+    font=Font'GUI.Fonts.Cinzel_22'
+  end object
+  uiFonts[DEFAULT_MEDIUM_PEACH]=Cinzel_Medium_Peach
   
   // Cinzel: Medium, Gray
   begin object class=UI_String_Style Name=Cinzel_Medium_Gray
