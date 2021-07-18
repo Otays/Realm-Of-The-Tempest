@@ -67,7 +67,7 @@ event onPushPageEvent() {
   
   // Start turbo auto selection timer
   turboDelay = gameInfo.spawn(class'ROTTTimer');
-  turboDelay.makeTimer(0.4, LOOP_OFF, autoSelect);
+  turboDelay.makeTimer(1.0, LOOP_OFF, autoSelect); /// was 0.4
 }
 
 /*============================================================================= 
@@ -378,7 +378,6 @@ protected function navigationRoutineA() {
       }
       // Store last enemy selection
       hero.lastEnemySelection = enemySelector.getSelection();
-      violetLog("Target saved on hero "$hero$": " $ enemySelector.getSelection());
       break;
     case MULTI_TARGET_ATTACK:
     case MULTI_TARGET_DEBUFF:

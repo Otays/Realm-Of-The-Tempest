@@ -99,7 +99,7 @@ event onPushPageEvent() {
   
   // Delay selection graphic
   menuDelay = gameInfo.spawn(class'ROTTTimer');
-  menuDelay.makeTimer(0.4, LOOP_OFF, allowInput);
+  menuDelay.makeTimer(1.0, LOOP_OFF, allowInput); /// was 0.4
 }
 
 /*============================================================================= 
