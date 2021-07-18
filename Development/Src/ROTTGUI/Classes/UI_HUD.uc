@@ -13,7 +13,7 @@ class UI_HUD extends HUD;
 enum ScaleModes {
   FIXED_SCALE,
   NO_STRETCH_SCALE,
-  STRETCH_SCALE
+  STRETCH_SCALE,
 };
 
 // Selected scaling mode
@@ -253,7 +253,7 @@ defaultProperties
   sceneManagerClass=class'UI_Scene_Manager'
   
   // Scale mode
-  scaleMode=STRETCH_SCALE
+  scaleMode=NO_STRETCH_SCALE
   
   // Cursor settings
   cursorColor=(R=255,G=255,B=255,A=255)
