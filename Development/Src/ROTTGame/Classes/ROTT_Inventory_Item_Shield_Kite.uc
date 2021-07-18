@@ -1,13 +1,13 @@
 /*============================================================================= 
- * ROTT_Inventory_Item_Charm_Bayuta
+ * ROTT_Inventory_Item_Shield_Kite
  *
  * Author: Otay
  * Bramble Gate Studios (All rights reserved)
  *
- * Recipe ingredient.
+ * Equipment
  *===========================================================================*/
  
-class ROTT_Inventory_Item_Charm_Bayuta extends ROTT_Inventory_Item;
+class ROTT_Inventory_Item_Shield_Kite extends ROTT_Inventory_Item;
 
 /*=============================================================================
  * getDropChance()
@@ -15,11 +15,7 @@ class ROTT_Inventory_Item_Charm_Bayuta extends ROTT_Inventory_Item;
  * Implemented in each item subclsas
  *===========================================================================*/
 protected function float getDropChance(int dropLevel) {
-  // Linear climb until cap
-  if (dropLevel < 5) return 1.f - ((5 - dropLevel) * 0.05f);
-  
-  // Cap
-  return 1.f;
+  return 22.f;
 }
 
 /*=============================================================================
@@ -46,15 +42,30 @@ protected function float getMaxQuantity(int dropLevel) {
 defaultProperties
 {
   // Item categories
-  category=ITEM_CATEGORY_CONSUMABLE
+  category=ITEM_CATEGORY_EQUIPABLE
+  bDoesNotStack=true
+  bUseClanColor=true
   
   // Display name
-  itemName="Bayuta Charm"
+  itemName="Kite Shield"
   
   // Item texture
-  itemTexture=Texture2D'ROTT_Items.Charms.Item_Charm_Purple'
+  ///itemTexture=Texture2D'ROTT_Items.Kite_Shield.Kite_Shield_Red'
+  
+  // Item Textures
+  itemClanTextures(CLAN_BLUE)=Texture2D'ROTT_Items.Kite_Shield.Kite_Shield_Blue'
+  itemClanTextures(CLAN_CYAN)=Texture2D'ROTT_Items.Kite_Shield.Kite_Shield_Cyan'
+  itemClanTextures(CLAN_GREEN)=Texture2D'ROTT_Items.Kite_Shield.Kite_Shield_Green'
+  itemClanTextures(CLAN_GOLD)=Texture2D'ROTT_Items.Kite_Shield.Kite_Shield_Gold'
+  itemClanTextures(CLAN_ORANGE)=Texture2D'ROTT_Items.Kite_Shield.Kite_Shield_Orange'
+  itemClanTextures(CLAN_RED)=Texture2D'ROTT_Items.Kite_Shield.Kite_Shield_Red'
+  itemClanTextures(CLAN_VIOLET)=Texture2D'ROTT_Items.Kite_Shield.Kite_Shield_Violet'
+  itemClanTextures(CLAN_PURPLE)=Texture2D'ROTT_Items.Kite_Shield.Kite_Shield_Purple'
+  itemClanTextures(CLAN_BLACK)=Texture2D'ROTT_Items.Kite_Shield.Kite_Shield_Black'
+  itemClanTextures(CLAN_WHITE)=Texture2D'ROTT_Items.Kite_Shield.Kite_Shield_White'
   
   // Item text color
-  itemFont=DEFAULT_SMALL_ORANGE
+  itemFont=DEFAULT_SMALL_GREEN
 }
+
 

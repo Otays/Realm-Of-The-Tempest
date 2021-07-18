@@ -15,7 +15,10 @@ class ROTT_Inventory_Item_Charm_Erazi extends ROTT_Inventory_Item;
  * Implemented in each item subclsas
  *===========================================================================*/
 protected function float getDropChance(int dropLevel) {
-  if (dropLevel < 5) return 1.f - dropLevel * 0.05f;
+  // Linear climb until cap
+  if (dropLevel < 5) return 1.f - ((5 - dropLevel) * 0.05f);
+  
+  // Cap
   return 1.f;
 }
 

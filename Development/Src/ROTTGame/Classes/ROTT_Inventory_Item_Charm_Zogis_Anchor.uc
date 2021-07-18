@@ -18,8 +18,18 @@ class ROTT_Inventory_Item_Charm_Zogis_Anchor extends ROTT_Inventory_Item;
  * Implemented in each item subclsas
  *===========================================================================*/
 protected function float getDropChance(int dropLevel) {
+  local float dropChance;
+  
+  // Cut until minimum drop level
   if (dropLevel < 25) return 0;
-  return 0.05f + (dropLevel * 0.001f);
+  
+  // Linear scaling by drop level
+  dropChance = 0.05f + (dropLevel * 0.001f);
+  
+  // Cap
+  if (dropChance > 2.f) dropChance = 2.f; 
+  
+  return dropChance;
 }
 
 /*=============================================================================

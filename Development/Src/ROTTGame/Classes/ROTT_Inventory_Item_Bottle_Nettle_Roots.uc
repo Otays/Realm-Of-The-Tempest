@@ -4,7 +4,7 @@
  * Author: Otay
  * Bramble Gate Studios (All rights reserved)
  *
- * Recipe ingredient.
+ * 
  *===========================================================================*/
  
 class ROTT_Inventory_Item_Bottle_Nettle_Roots extends ROTT_Inventory_Item;
@@ -18,7 +18,10 @@ class ROTT_Inventory_Item_Bottle_Nettle_Roots extends ROTT_Inventory_Item;
  * Implemented in each item subclsas
  *===========================================================================*/
 protected function float getDropChance(int dropLevel) {
+  // Cut until minimum drop level
   if (dropLevel < 10) return 0;
+  
+  // Cap
   return 0.5f + (dropLevel * 0.05f);
 }
 
