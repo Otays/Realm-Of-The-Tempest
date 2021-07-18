@@ -561,7 +561,7 @@ defaultProperties
     alignX=RIGHT
     alignY=BOTTOM
     fontStyle=DEFAULT_MEDIUM_TAN
-    labelText="Work in progress"
+    labelText=""
   end object
   componentList.add(WIP_Label)
 }
