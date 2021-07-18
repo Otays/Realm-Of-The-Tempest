@@ -119,7 +119,7 @@ defaultProperties
     
     // Cycle effects
     activeEffects.add((effectType=EFFECT_FLIPBOOK, lifeTime=-1, elapsedTime=0, intervalTime=0.1, min=0, max=255))
-    cycleStyles=(DEFAULT_MEDIUM_GOLD, DEFAULT_MEDIUM_ORANGE)
+    cycleStyles=(DEFAULT_MEDIUM_GOLD, DEFAULT_MEDIUM_PEACH)
   end object
   componentList.add(Main_Label_Right_Side)
   
@@ -137,7 +137,7 @@ defaultProperties
     
     // Cycle effects
     activeEffects.add((effectType=EFFECT_FLIPBOOK, lifeTime=-1, elapsedTime=0, intervalTime=0.1, min=0, max=255))
-    cycleStyles=(DEFAULT_MEDIUM_GOLD, DEFAULT_MEDIUM_ORANGE)
+    cycleStyles=(DEFAULT_MEDIUM_GOLD, DEFAULT_MEDIUM_PEACH)
   end object
   componentList.add(Sub_Label_Right_Side)
   

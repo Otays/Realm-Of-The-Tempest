@@ -198,7 +198,7 @@ defaultProperties
     posYEnd=612
     alignX=CENTER
     alignY=TOP
-    fontStyle=DEFAULT_MEDIUM_ORANGE
+    fontStyle=DEFAULT_MEDIUM_PEACH
     labelText="The Obelisk shrine awaits your prayers."
   end object
   componentList.add(Interface_Text_Line_1)
@@ -211,7 +211,7 @@ defaultProperties
     posYEnd=621
     alignX=CENTER
     alignY=TOP
-    fontStyle=DEFAULT_MEDIUM_ORANGE
+    fontStyle=DEFAULT_MEDIUM_PEACH
     labelText="The Obelisk shrine awaits your prayers."
   end object
   componentList.add(Interface_Text_Line_2)

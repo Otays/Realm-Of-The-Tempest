@@ -211,7 +211,7 @@ defaultProperties
     posYEnd=NATIVE_HEIGHT
     AlignX=LEFT
     AlignY=TOP
-    fontStyle=DEFAULT_MEDIUM_ORANGE
+    fontStyle=DEFAULT_MEDIUM_PEACH
     labelText="Outgoing Actions\n\n\n\n\nIncoming Actions\n\n\n\n\nElapsed Time"
   end object
   componentList.add(Analysis_Descriptions_Left_Orange)
@@ -239,7 +239,7 @@ defaultProperties
     posYEnd=NATIVE_HEIGHT
     AlignX=LEFT
     AlignY=TOP
-    fontStyle=DEFAULT_MEDIUM_ORANGE
+    fontStyle=DEFAULT_MEDIUM_PEACH
     labelText="Glyphs Collected"
   end object
   componentList.add(Analysis_Descriptions_Right_Orange)

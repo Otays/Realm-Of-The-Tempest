@@ -112,7 +112,7 @@ defaultProperties
     posY=8
     posXEnd=NATIVE_WIDTH
     posYEnd=NATIVE_HEIGHT
-    fontStyle=DEFAULT_MEDIUM_ORANGE
+    fontStyle=DEFAULT_MEDIUM_PEACH
     labelText="You must imbue each tile with magic, while"
     alignX=CENTER
     alignY=CENTER
@@ -126,7 +126,7 @@ defaultProperties
     posY=128
     posXEnd=NATIVE_WIDTH
     posYEnd=NATIVE_HEIGHT
-    fontStyle=DEFAULT_MEDIUM_ORANGE
+    fontStyle=DEFAULT_MEDIUM_PEACH
     labelText="avoiding tiles that overheat."
     alignX=CENTER
     alignY=CENTER
