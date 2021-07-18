@@ -58,7 +58,7 @@ public function addItem(ROTT_Inventory_Item newItem) {
   // Look for the item already in the list
   for (i = 0; i < itemList.length; i++) {
     // Check by item type
-    if (itemList[i].class == newItem.class) {
+    if (itemList[i].class == newItem.class && !itemList[i].bDoesNotStack) {
       // Combine quantities
       itemList[i].addQuantity(newItem.quantity);
       return;
@@ -172,6 +172,7 @@ public function sort() {
   
   orderedTypes.addItem(class'ROTT_Inventory_Item_Charm_Zogis_Anchor');
   orderedTypes.addItem(class'ROTT_Inventory_Item_Bottle_Nettle_Roots');
+  orderedTypes.addItem(class'ROTT_Inventory_Item_Shield_Kite');
   
   // Organize inventory for each ordered type
   for (i = 0; i < orderedTypes.length; i++) {
@@ -198,8 +199,9 @@ public function cullInventory() {
   local array<ROTT_Inventory_Item> ritualItems;
   local int i, k;
   
-  // Scan through inventory 
+  // Scan through inventory for ritual items
   for (i = itemList.length - 1; i >= 0; i--) {
+    // Check for ritual consumables
     if (itemList[i].category == ITEM_CATEGORY_CONSUMABLE) {
       // Move item to ritual list
       ritualItems.addItem(itemList[i]);
@@ -208,7 +210,7 @@ public function cullInventory() {
   }
   
   // Cull randomly until suitable length
-  while (ritualItems.length > 4) {
+  while (ritualItems.length > 2) {
     // Generate random index
     k = rand(ritualItems.length);
     
@@ -221,6 +223,16 @@ public function cullInventory() {
     // Move item to ritual list
     addItem(ritualItems[i]);
     ritualItems.remove(i, 1);
+  }
+  
+  // Cull package size to 8
+  while (itemList.length > 8) {
+    // Generate random index for bottom row (4,5,6,7)
+    k = 3 + rand(4);
+    
+    // Remove item
+    violetLog("Culling item: " $ itemList[k].itemName);
+    itemList.remove(k, 1);
   }
 }
 

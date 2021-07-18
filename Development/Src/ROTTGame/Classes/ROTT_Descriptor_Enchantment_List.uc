@@ -233,8 +233,8 @@ public static function EnchantmentDescriptor getEnchantment
         "Adding +%add% Mana",
         "New Total: +%total% Mana"
       );
-      setGoldGemCost(script, 5000, 25);
-      setBonus(script, 2);
+      setGoldGemCost(script, 4000, 20);
+      setBonus(script, 1);
       
       return script;
       
@@ -250,8 +250,8 @@ public static function EnchantmentDescriptor getEnchantment
         "Adding +%add% Health",
         "New Total: +%total% Health"
       );
-      setGoldGemCost(script, 5000, 25);
-      setBonus(script, 2);
+      setGoldGemCost(script, 4000, 20);
+      setBonus(script, 1);
       
       return script;
       

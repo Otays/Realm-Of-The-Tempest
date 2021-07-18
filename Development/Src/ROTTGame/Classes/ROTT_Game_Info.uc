@@ -159,6 +159,7 @@ var privatewrite ROTT_Milestone_Cookie milestoneCookie;
 
 // Store all possible items that may drop in the game
 var public array<class<ROTT_Inventory_Item> > lootTypes;
+var public array<class<ROTT_Inventory_Item> > equipTypes;
 
 // Item drop rate modifier
 struct ItemDropMod {
@@ -381,9 +382,9 @@ public function newGameSetup(byte gameMode) {
   ///whiteLog("--- Starting Timer ---");
   ///playerProfile.bTrackTime = true;
   
-  // Set up a new game
+  // Set up a new gamewould recommend trying the time boost in combat early
   playerProfile.newGameSetup(gameMode);
-  saveGame(TRANSITION_SAVE);    
+  saveGame(TRANSITION_SAVE);
 }
 
 /*=============================================================================
@@ -1613,15 +1614,15 @@ public function ROTT_Inventory_Package generateLoot
     
     // Add enchantment power to amplifier
     amplifier += playerProfile.getEnchantBoost(OMNI_SEEKER) / 100.f;
-    
-    // Apply full level amplifiers
+  
+    // Apply full level quantity amplifiers
     for (j = 0; j < int(amplifier); j++) {
-      
       // Try to generate an item
       newItem = lootTypes[i].static.generateItem(lootTypes[i], level, dropMod);
-    
+      
       // Check if item dropped
       if (newItem != none) {
+        newItem.initializeAttributes();
         lootPackage.addItem(newItem);
       }
     }
@@ -1636,10 +1637,30 @@ public function ROTT_Inventory_Package generateLoot
     
       // Check if item dropped
       if (newItem != none) {
+        newItem.initializeAttributes();
         lootPackage.addItem(newItem);
       }
     }
+  }
+  
+  // Iterate through all possible equipment drops
+  for (i = 0; i < equipTypes.length && lootPackage.count() < 8; i++) {
+    // Find drop modifications
+    dropMod = getDropMod(dropMods, equipTypes[i]);
     
+    // Add enchantment power to amplifier
+    amplifier += playerProfile.getEnchantBoost(OMNI_SEEKER) / 100.f;
+
+    // Try to generate an item
+    newItem = equipTypes[i].static.generateItem(
+      equipTypes[i], level + amplifier * 5, dropMod
+    );
+    
+    // Check if item dropped
+    if (newItem != none) {
+      newItem.initializeAttributes();
+      lootPackage.addItem(newItem);
+    }
   }
   
   // Cull item count, removes items for 8 slot limit
@@ -1773,6 +1794,7 @@ defaultProperties
   lootTypes.add(class'ROTT_Inventory_Item_Bottle_Faerie_Bones')
   lootTypes.add(class'ROTT_Inventory_Item_Bottle_Yinras_Ore')
   
+  equipTypes.add(class'ROTT_Inventory_Item_Shield_Kite')
 }
 
 

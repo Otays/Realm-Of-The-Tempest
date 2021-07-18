@@ -14,7 +14,7 @@ const INVENTORY_SLOT_COUNT = 16;
 // Internal references
 var private UI_Sprite inventoryBackground;
 var private UI_Label inventoryPageLabel;
-var private UI_Label itemLabel;
+///var private UI_Label itemLabel;
 var private UI_Selector inventorySelector;
 
 // Inventory Navigation
@@ -37,7 +37,7 @@ public function initializeComponent(optional string newTag = "") {
   // Get internal references
   inventoryBackground = findSprite("Inventory_Background");
   inventoryPageLabel = findLabel("Inventory_Page_Label");
-  itemLabel = findLabel("Item_Name_Label");
+  ///itemLabel = findLabel("Item_Name_Label");
   inventorySelector = UI_Selector(findComp("Inventory_Selector_Box"));
   
   // Initialize item displayers
@@ -85,16 +85,22 @@ public function refresh() {
   selectedItem = getItem(index);
   
   // Show name of item
-  if (selectedItem != none) {
-    itemLabel.setText(selectedItem.itemName);
-    itemLabel.setFont(selectedItem.itemFont);
-  } else {
-    itemLabel.setText("");
-  }
+  ///if (selectedItem != none) {
+  ///  itemLabel.setText(selectedItem.itemName);
+  ///} else {
+  ///  itemLabel.setText("");
+  ///}
   
   // Show a page of the player's inventory
   for (i = 0; i < INVENTORY_SLOT_COUNT; i++) {
     inventorySlots[i].updateDisplay(getItem(i + pageIndex * INVENTORY_SLOT_COUNT));
+  }
+  
+  // Update inspector window
+  if (selectedItem != none) {
+    ROTT_UI_Scene_Game_Menu(Outer).setMgmtDescriptor(
+      selectedItem.getItemDescriptor(selectedItem)
+    );
   }
   
   // Footer page numbers
@@ -121,7 +127,10 @@ public function ROTT_Inventory_Item getItem(int index) {
 event onFocusMenu() {
   // Changes to graphics
   inventoryBackground.setEnabled(true);
+  
+  // Selector focus
   inventorySelector.setEnabled(true);
+  inventorySelector.setActive(true);
   
   // Show items
   refresh();
@@ -168,6 +177,9 @@ protected function navigationRoutineLB() {
   
   // Update visuals
   refresh();
+  
+  // Sfx
+  gameInfo.sfxBox.playSfx(SFX_MENU_NAVIGATE);
 }
  
 protected function navigationRoutineRB() {
@@ -179,6 +191,9 @@ protected function navigationRoutineRB() {
   
   // Update visuals
   refresh();
+  
+  // Sfx
+  gameInfo.sfxBox.playSfx(SFX_MENU_NAVIGATE);
 }
 
 /*=============================================================================
@@ -186,7 +201,10 @@ protected function navigationRoutineRB() {
  *===========================================================================*/
 protected function navigationRoutineA() {
   // Load item inspection
-  //ROTT_UI_Scene_Game_Menu(Outer).giveFocusToMenu(ITEM_INSPECTION);
+  ROTT_UI_Scene_Game_Menu(Outer).focusTop();
+  
+  // Sfx
+  gameInfo.sfxBox.playSfx(SFX_MENU_ACCEPT);
 }
 
 protected function navigationRoutineB() {
@@ -194,6 +212,8 @@ protected function navigationRoutineB() {
   inventoryBackground.setEnabled(false);
   inventoryPageLabel.setText("");
   
+  // Pop both inventory and inspection
+  parentScene.popPage();
   parentScene.popPage();
   
   gameInfo.sfxBox.playSfx(SFX_MENU_BACK);
@@ -238,32 +258,6 @@ defaultProperties
   end object
   inputList.add(Input_RB)
   
-  /** ===== Cache ===== **/
-  ///begin object class=UI_Texture_Info Name=Item_Bottle_Blue
-  ///  componentTextures.add(Texture2D'ROTT_Items.Item_Bottle_Blue')
-  ///end object
-  ///begin object class=UI_Texture_Info Name=Item_Bottle_Pink
-  ///  componentTextures.add(Texture2D'ROTT_Items.Item_Bottle_Pink')
-  ///end object
-  ///begin object class=UI_Texture_Info Name=Item_Bottle_Purple
-  ///  componentTextures.add(Texture2D'ROTT_Items.Item_Bottle_Purple')
-  ///end object
-  ///begin object class=UI_Texture_Info Name=Item_Bottle_Green
-  ///  componentTextures.add(Texture2D'ROTT_Items.Item_Bottle_Green')
-  ///end object
-  ///
-  ///// Item Cache Container
-  ///begin object class=UI_Texture_Storage Name=Item_Cache
-  ///  tag="Item_Cache"
-  ///  textureWidth=240
-  ///  textureHeight=240
-  ///  images(0)=Item_Bottle_Blue
-  ///  images(1)=Item_Bottle_Pink
-  ///  images(2)=Item_Bottle_Purple
-  ///  images(3)=Item_Bottle_Green
-  ///end object
-  ///componentList.add(Item_Cache);
-  
   /** ===== Textures ===== **/
   // Inventory Background
   begin object class=UI_Texture_Info Name=Inventory_Page
@@ -306,7 +300,8 @@ defaultProperties
     posYEnd=124
     AlignX=CENTER
     AlignY=CENTER
-    labelText="Empty"
+    fontStyle=DEFAULT_MEDIUM_GOLD
+    labelText="Inventory"
   end object
   componentList.add(Item_Name_Label)
   
@@ -354,6 +349,17 @@ defaultProperties
       activeEffects.add((effectType = EFFECT_ALPHA_CYCLE, lifeTime = -1, elapsedTime = 0, intervalTime = 0.4, min = 170, max = 255))
     end object
     componentList.add(Selector_Sprite)
+    
+    // Inactive selector sprite
+    begin object class=UI_Sprite Name=Inactive_Selector_Sprite
+      tag="Inactive_Selector_Sprite"
+      images(0)=Inventory_Selection_Texture
+      
+      // Selector effect
+      ///activeEffects.add((effectType = EFFECT_ALPHA_CYCLE, lifeTime = -1, elapsedTime = 0, intervalTime = 2, min = 70, max = 205))
+      activeEffects.add((effectType=EFFECT_FLICKER, lifeTime=-1, elapsedTime=0, intervalTime=0.4, min=100, max=205))
+    end object
+    componentList.add(Inactive_Selector_Sprite)
     
   end object
   componentList.add(Inventory_Selector_Box) 

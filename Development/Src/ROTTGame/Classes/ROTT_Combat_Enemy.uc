@@ -131,6 +131,15 @@ public static function ROTT_Combat_Enemy generateMonster
 }
 
 /*============================================================================= 
+ * getClanColorCount()
+ *
+ * Returns total number of clan colors
+ *===========================================================================*/
+static function int getClanColorCount() {
+  return MyColors.enumCount;
+}
+
+/*============================================================================= 
  * getPortrait()
  *
  * Returns the draw info for the enemy sprite (in combat.)
@@ -268,12 +277,9 @@ public function initEnemy
     case SPAWN_CHAMPION:
       // Randomized name and sprite
       monsterName = generateMonsterName();
-      ///randomizeSprite();
       break;
     default:
       // Assign a fixed sprite
-      ///enemySprites[clanColor].moveIndexToZero(monsterType);
-      ///champSprites[clanColor].moveIndexToZero(monsterType);
       break;
   }
   

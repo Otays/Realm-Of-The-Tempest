@@ -1348,9 +1348,6 @@ public function bool skillAction
             ADD_ARMOR, 
             getAttributeInfo(INCREASE_ARMOR, caster, level)
           );
-          
-        violetLog("Armor amp");
-          scripttrace();
           break;
           
         // Demoralization

@@ -1115,13 +1115,26 @@ public function bool removeStat(StatTypes statType) {
 }
 
 /*=============================================================================
+ * checkBlessingCap()
+ *
+ * Returns true if room for more blessings
+ *===========================================================================*/
+public function bool checkBlessingCap() {
+  // Ignore cap after 20
+  if (level >= 20) return true;
+  
+  // One per level cap
+  return (blessingCount >= level);
+}
+
+/*=============================================================================
  * blessStat()
  *
  * Attempts to add a blessed stat point.  Returns false on failure.
  *===========================================================================*/
 public function int blessStat(StatTypes statType) {
   // Exit if blessings are maxed
-  if (blessingCount >= level) return -2;
+  if (checkBlessingCap()) return -2;
 
   // Check for sufficient currency
   if (gameInfo.canDeductCosts(gameInfo.getBlessingCost())) {
@@ -1707,7 +1720,15 @@ protected function attackTimeComplete() {
  * the last.
  *===========================================================================*/
 public function int getBlessingCost() {
-  return blessingCount * 250 + 250;
+  local float cost;
+  
+  // Per level cost
+  cost = blessingCount * 250 + 250;
+  
+  // Cap cost
+  if (cost > 2000) return 2000;
+  
+  return cost;
 }
 
 /*=============================================================================

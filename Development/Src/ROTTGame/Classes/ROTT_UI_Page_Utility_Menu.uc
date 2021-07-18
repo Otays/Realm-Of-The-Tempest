@@ -96,6 +96,8 @@ protected function navigationRoutineA() {
     case UTILITY_INVENTORY:
       /** delegate me **/
       ROTT_UI_Scene_Game_Menu(parentScene).pushMenu(INVENTORY_MENU);
+      ROTT_UI_Scene_Game_Menu(parentScene).pushMenu(MGMT_WINDOW_ITEM);
+      
       // Sfx
       gameInfo.sfxBox.playSfx(SFX_MENU_ACCEPT);
       break;

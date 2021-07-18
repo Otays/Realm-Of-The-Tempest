@@ -22,6 +22,7 @@ enum GameMenuPages {
   GLYPH_SKILLTREE,
   MASTERY_SKILLTREE,
   
+  MGMT_WINDOW_ITEM,
   MGMT_WINDOW_STATS,
   MGMT_WINDOW_SKILLS,
   MGMT_WINDOW_PASSIVE,
@@ -29,6 +30,7 @@ enum GameMenuPages {
   MGMT_WINDOW_BLANK,
   
   INVENTORY_MENU,
+  
   REINVEST_STAT_MENU,
   REINVEST_SKILL_MENU,
   HYPER_SKILLTREE,
@@ -45,25 +47,26 @@ enum GameMenuPages {
 var private ROTT_Descriptor_Hero_Skill lastDescriptor;
 
 // Internal menu references
-var private ROTT_UI_Page_Game_Menu leftGameMenu;
-var private ROTT_UI_Page_Utility_Menu utilityMenu;
-var private ROTT_UI_Page_Party_Selection partySelection;
-var private ROTT_UI_Page_Stats_Inspection statsInspection;
-var private ROTT_UI_Page_Class_Skilltree classSkilltree;
-var private ROTT_UI_Page_Glyph_Skilltree glyphSkilltree;
-var private ROTT_UI_Page_Mastery_Skilltree masterySkilltree;
+var privatewrite ROTT_UI_Page_Game_Menu leftGameMenu;
+var privatewrite ROTT_UI_Page_Utility_Menu utilityMenu;
+var privatewrite ROTT_UI_Page_Party_Selection partySelection;
+var privatewrite ROTT_UI_Page_Stats_Inspection statsInspection;
+var privatewrite ROTT_UI_Page_Class_Skilltree classSkilltree;
+var privatewrite ROTT_UI_Page_Glyph_Skilltree glyphSkilltree;
+var privatewrite ROTT_UI_Page_Mastery_Skilltree masterySkilltree;
 
-var private ROTT_UI_Page_Mgmt_Window_Stats mgmtWindowStats;
-var private ROTT_UI_Page_Mgmt_Window_Skills mgmtWindowSkills;
-var private ROTT_UI_Page_Mgmt_Window_Passive mgmtWindowPassive;
-var private ROTT_UI_Page_Mgmt_Window_Collectible mgmtWindowCollect;
-var private ROTT_UI_Page_Mgmt_Window_Blank mgmtWindowBlank;
+var privatewrite ROTT_UI_Page_Mgmt_Window_Item mgmtWindowItem;
+var privatewrite ROTT_UI_Page_Mgmt_Window_Stats mgmtWindowStats;
+var privatewrite ROTT_UI_Page_Mgmt_Window_Skills mgmtWindowSkills;
+var privatewrite ROTT_UI_Page_Mgmt_Window_Passive mgmtWindowPassive;
+var privatewrite ROTT_UI_Page_Mgmt_Window_Collectible mgmtWindowCollect;
+var privatewrite ROTT_UI_Page_Mgmt_Window_Blank mgmtWindowBlank;
 
-var private ROTT_UI_Page_Inventory inventoryScreen;
-var private ROTT_UI_Page_Reset_Stat resetStatMenu;
-var private ROTT_UI_Page_Reset_Skill resetSkillMenu;
-var private ROTT_UI_Page_Reset_Skill_Preview resetSkillPreview;
-var private ROTT_UI_Page_Hyper_Skilltree hyperSkilltree;
+var privatewrite ROTT_UI_Page_Inventory inventoryScreen;
+var privatewrite ROTT_UI_Page_Reset_Stat resetStatMenu;
+var privatewrite ROTT_UI_Page_Reset_Skill resetSkillMenu;
+var privatewrite ROTT_UI_Page_Reset_Skill_Preview resetSkillPreview;
+var privatewrite ROTT_UI_Page_Hyper_Skilltree hyperSkilltree;
 
 var private ROTT_UI_Page_Enchantments enchantmentsPage;
 
@@ -94,6 +97,7 @@ event initScene() {
   glyphSkilltree = ROTT_UI_Page_Glyph_Skilltree(findComp("Glyph_Skilltree_UI"));
   masterySkilltree = ROTT_UI_Page_Mastery_Skilltree(findComp("Mastery_Skilltree_UI"));
   
+  mgmtWindowItem = ROTT_UI_Page_Mgmt_Window_Item(findComp("Mgmt_Window_Item"));
   mgmtWindowStats = ROTT_UI_Page_Mgmt_Window_Stats(findComp("Mgmt_Window_Stats"));
   mgmtWindowSkills = ROTT_UI_Page_Mgmt_Window_Skills(findComp("Mgmt_Window_Skills"));
   mgmtWindowPassive = ROTT_UI_Page_Mgmt_Window_Passive(findComp("Mgmt_Window_Passive"));
@@ -223,18 +227,19 @@ public function switchPage(GameMenuPages scene) {
 public function pushMenu(GameMenuPages menu) {
   // Push new menu to the stack
   switch (menu) {
-    case LEFT_GAME_MENU:      pushPage(leftGameMenu);        break;
-    case UTILITY_MENU:        pushPage(utilityMenu);         break;
-    case STATS_INSPECTION:    pushPage(statsInspection);     break;
-    case CLASS_SKILLTREE:     pushPage(classSkilltree);      break;
-    case GLYPH_SKILLTREE:     pushPage(glyphSkilltree);      break;
-    case MASTERY_SKILLTREE:   pushPage(masterySkilltree);    break;
+    case LEFT_GAME_MENU:            pushPage(leftGameMenu);         break;
+    case UTILITY_MENU:              pushPage(utilityMenu);          break;
+    case STATS_INSPECTION:          pushPage(statsInspection);      break;
+    case CLASS_SKILLTREE:           pushPage(classSkilltree);       break;
+    case GLYPH_SKILLTREE:           pushPage(glyphSkilltree);       break;
+    case MASTERY_SKILLTREE:         pushPage(masterySkilltree);     break;
     
-    case INVENTORY_MENU:      pushPage(inventoryScreen);     break;
-    case PROFILE_SCREEN:      pushPage(profilePage);         break;
-    case GUIDE_SCREEN:        pushPage(guidePage);           break;
+    case INVENTORY_MENU:            pushPage(inventoryScreen);      break;
+    case PROFILE_SCREEN:            pushPage(profilePage);          break;
+    case GUIDE_SCREEN:              pushPage(guidePage);            break;
     
     // Push without focus
+    case MGMT_WINDOW_ITEM:    pushPage(mgmtWindowItem, false);      break;
     case MGMT_WINDOW_STATS:   pushPage(mgmtWindowStats, false);     break;
     case MGMT_WINDOW_SKILLS:  pushPage(mgmtWindowSkills, false);    break;
     case MGMT_WINDOW_PASSIVE: pushPage(mgmtWindowPassive, false);   break;
@@ -264,16 +269,6 @@ public function pushMenu(GameMenuPages menu) {
   } 
 }
 
-/**============================================================================= 
- * pushResetStatPage()
- *
- * 
- *===========================================================================
-public function pushResetStatPage() {
-  pushMenu(STATS_INSPECTION);
-  statsInspection.setResetMode();
-}
-*/
 /*============================================================================= 
  * setMgmtDescriptor()
  *
@@ -281,8 +276,11 @@ public function pushResetStatPage() {
  * by it
  *===========================================================================*/
 public function setMgmtDescriptor(ROTT_Descriptor descriptor) {
+  // Caching
   lastDescriptor = ROTT_Descriptor_Hero_Skill(descriptor);
   
+  // Assignment
+  mgmtWindowItem.setDescriptor(descriptor);
   mgmtWindowStats.setDescriptor(descriptor);
   mgmtWindowSkills.setDescriptor(descriptor);
   mgmtWindowPassive.setDescriptor(descriptor);
@@ -447,6 +445,12 @@ defaultProperties
     tag="Hyper_Skilltree_UI"
   end object
   pageComponents.add(Hyper_Skilltree_UI)
+  
+  // Item Management Window
+  begin object class=ROTT_UI_Page_Mgmt_Window_Item Name=Mgmt_Window_Item
+    tag="Mgmt_Window_Item"
+  end object
+  pageComponents.add(Mgmt_Window_Item)
   
   // Stat Management Window
   begin object class=ROTT_UI_Page_Mgmt_Window_Stats Name=Mgmt_Window_Stats

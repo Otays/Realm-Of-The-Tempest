@@ -21,13 +21,84 @@ var privatewrite ItemCategory category;
 // Display information
 var privatewrite string itemName;
 var privatewrite FontStyles itemFont;
+var privatewrite int itemLevel;
 
 // Quantity
 var privatewrite int quantity;
+var privatewrite bool bDoesNotStack;
 
 // Inventory graphic
 var public instanced UI_Texture_Storage itemSprite;
 var privatewrite Texture2D itemTexture;
+
+// Optional clan color
+var privatewrite Texture2D itemClanTextures[10];
+var protectedwrite MyColors clanColor;
+var protectedwrite bool bUseClanColor;
+
+// Item attributes for equiped usage
+enum EquipmentAttributes {
+  // Armor
+  ITEM_ADD_ARMOR,
+  
+  // Health
+  ITEM_ADD_HEALTH,
+  ITEM_ADD_HEALTH_REGEN,
+  ITEM_MULTIPLY_HEALTH,
+  
+  // Mana
+  ITEM_ADD_MANA,
+  ITEM_ADD_MANA_REGEN,
+  ITEM_MULTIPLY_MANA,
+  
+  // Speed
+  ITEM_ADD_SPEED,
+  ITEM_REDUCE_ENEMY_SPEED,
+  
+  // Accuracy and dodge
+  ITEM_ADD_ACCURACY,
+  ITEM_ADD_DODGE,
+  
+  // Stats
+  ITEM_ADD_ALL_STATS, 
+  ITEM_ADD_VITALITY, 
+  ITEM_ADD_STRENGTH, 
+  ITEM_ADD_COURAGE, 
+  ITEM_ADD_FOCUS, 
+  
+  // Skills
+  ITEM_ADD_CLASS_SKILLS,
+  ITEM_ADD_GLYPH_SKILLS,
+  ITEM_ADD_SKILL_POINTS, /// ...? [one skill]
+  
+  // Damage
+  ITEM_ADD_PHYSICAL_MAX,
+  ITEM_ADD_PHYSICAL_MIN,
+  ITEM_MULTIPLY_ELEMENTAL,
+  
+  // Enchantments (Carries from inactive teams too)
+  ITEM_ADD_ENCHANTMENT_LEVEL, 
+  
+  // Misc
+  ITEM_ADD_GLYPH_LUCK,
+  ITEM_ADD_LOOT_LUCK,
+  ITEM_MULTIPLY_EXPERIENCE,
+  ITEM_FASTER_AURA_STRIKES,
+  ITEM_LACERATIONS, /// ... DPS drain of constant 25% dmg dealt, x% chance?
+  ITEM_PERSISTENCE, /// ... Chance to strike again in half time?
+  ITEM_MULTIPLY_PRAYER, 
+  ITEM_MULTIPLY_HOARD_SIZE, 
+};
+
+// Store item attributes
+var protectedwrite int itemStats[EquipmentAttributes]; 
+
+// Store which skill ID to boost for ADD_SKILL_POINTS
+var protectedwrite HeroClassEnum heroSkillType; 
+var protectedwrite int heroSkillID; 
+
+// Store which enchantment to boost
+var protectedwrite EnchantmentEnum enchantmentType; 
 
 // Linked list type storage system
 var public class<ROTT_Inventory_Item> nextSavedItemType;
@@ -38,30 +109,47 @@ var public class<ROTT_Inventory_Item> nextSavedItemType;
  * This needs to be called when the item is created
  *===========================================================================*/
 public function initialize() {
-  local UI_Texture_Info textureInfo;
-  
   linkReferences();
-  
-  // Check for valid item texture
-  if (itemTexture == none) {
-    yellowLog("Warning (!) No texture specified for item: " $ self);
-    return;
-  }
-  
-  // Set up texture info
-  textureInfo = new class'UI_Texture_Info';
-  textureInfo.componentTextures.addItem(itemTexture);
-  textureInfo.initializeInfo();
-  
+
   // Set up texture storage
   itemSprite = new class'UI_Texture_Storage';
   itemSprite.initializeComponent("Inventory_Sprite");
-  itemSprite.addTexture(textureInfo, 0);
+  itemSprite.addTexture(getItemTexture(), 0);
   
   // Initialize each UI component
   itemSprite.initializeComponent();
 }
 
+/*=============================================================================
+ * getItemTexture()
+ *
+ * Returns texture information for the item
+ *===========================================================================*/
+private function UI_Texture_Info getItemTexture() {
+  local UI_Texture_Info textureInfo;
+  
+  // Set up texture info
+  textureInfo = new class'UI_Texture_Info';
+  
+  // Texture assignment 
+  if (bUseClanColor) {
+    // Clan color assignment
+    textureInfo.componentTextures.addItem(itemClanTextures[clanColor]);
+  } else {
+    // Default assignment
+    textureInfo.componentTextures.addItem(itemTexture);
+  }
+  textureInfo.initializeInfo();
+
+  // Check for valid item texture
+  if (textureInfo == none) {
+    yellowLog("Warning (!) No texture specified for item: " $ self);
+    return none;
+  }
+  
+  return textureInfo;
+}
+  
 /*=============================================================================
  * setQuantity()
  *
@@ -77,6 +165,11 @@ public function setQuantity(int q) {
  * Adds the quantity
  *===========================================================================*/
 public function addQuantity(int a) {
+  if (bDoesNotStack) {
+    yellowLog("Warning (!) Item does not stack");
+    scriptTrace();
+    return;
+  }
   quantity += a;
 }
 
@@ -107,6 +200,44 @@ public function onTake() {
 }
 
 /*=============================================================================
+ * initializeAttributes()
+ *
+ * Called after item generation for values dependent on instanced variables.
+ *===========================================================================*/
+public function initializeAttributes() {
+  // Check for clan color usage
+  if (bUseClanColor) {
+    // Randomize clan color
+    clanColor = MyColors(
+      rand(class'ROTT_Combat_Enemy'.static.getClanColorCount())
+    );
+    
+    // Set up texture storage
+    violetlog("clan color: " $ clanColor);
+    itemSprite.resetDrawInfo();
+    itemSprite.addTexture(getItemTexture(), 0);
+  }
+  
+  // Cap quantity if no stack
+  if (bDoesNotStack) setQuantity(1);
+}
+
+/*=============================================================================
+ * getItemDescriptor()
+ *
+ * Provides a formatted descriptor for item inspection window.
+ *===========================================================================*/
+public static function ROTT_Descriptor getItemDescriptor(ROTT_Inventory_Item target) 
+{
+  local ROTT_Descriptor_Item itemDescriptor;
+  
+  itemDescriptor = new class'ROTT_Descriptor_Item';
+  itemDescriptor.formatItem(target);
+
+  return itemDescriptor;
+}
+  
+/*=============================================================================
  * generateItem()
  *
  * Given a drop level, and optionally a drop mod, this handles chance to drop,
@@ -127,6 +258,7 @@ public static function ROTT_Inventory_Item generateItem
   // Create item
   item = new lootType;
   item.initialize();
+  item.itemLevel = dropLevel;
   
   // Get default drop info
   dropChance = item.getDropChance(dropLevel);
@@ -199,6 +331,7 @@ defaultProperties
   
   // Default color
   itemFont=DEFAULT_SMALL_WHITE
+  
 }
 
 
@@ -263,12 +396,6 @@ var byte OverlayIndex;
 
 / Skill arrays /
 var array<byte> PossibleSkills;
-
-var array<byte> ValkSkills;
-var array<byte> GoliathSkills;
-var array<byte> WizardSkills;
-var array<byte> TitanSkills;
-
 
 ////////////////////////////////////////
 //                                    //
@@ -684,62 +811,6 @@ defaultProperties
 
 
 /
-
-
-
-switch (HeldItemInventory[InventoryIndex].ItemAttributes[i].AttributeID)
-{
-  case 1:
-    AttributeInfo = "+%1 to Max HP";
-    break;
-  case 2:
-    AttributeInfo = "+%1 to Max MP";
-    break;
-  case 3:
-    AttributeInfo = "+%1 to Damage Reduction";
-    break;
-  case 4:
-    AttributeInfo = "%1 to %2 more Physical Damage";
-    break;
-  case 5:
-    AttributeInfo = "%1 to max Physical Damage";
-    break;
-  case 6:
-    AttributeInfo = "+%1 to Glyph Luck";
-    break;
-  case 7:
-    AttributeInfo = "+%1 to %SKILL";
-    break;
-  case 8:
-    AttributeInfo = "+%1 to %SKILL";
-    break;
-  case 9:
-    AttributeInfo = "+%1% chance of Lacerations";
-    break;
-  case 10:
-    AttributeInfo = "%1 HP Regen";
-    break;
-  case 11:
-    AttributeInfo = "%1 MP Regen";
-    break;
-  case 12:
-    AttributeInfo = "+%1% Raid Loot";
-    break;
-  case 13:
-    AttributeInfo = "+%1% chance to block";
-    break;
-  case 14:
-    AttributeInfo = "+%1% experience gained";
-    break;
-  case 15:
-    AttributeInfo = "+%1% chance of Persistence";
-    break;
-  case 16:
-    AttributeInfo = "+%1% faster Aura Strikes";
-    break;
-  
-}
-
 
 
 
